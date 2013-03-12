@@ -99,7 +99,7 @@ class plgContentrpcping extends JPlugin{
 		}
 
 		// Otherwise see if the content has been marked as updated
-
+	      // For some reason this always fails, guessing you can't grab a cache that's been set from the back-end? TODO
 	      if ($upd = $this->cache->get('plg_rpcping_content'.$item->id) && ($upd == '1')) {
 		    $this->sendPing($item);
 		    // If it was successful, prevent further pings
