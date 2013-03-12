@@ -15,14 +15,14 @@ defined('_JEXEC') or die('Restricted access');
 // Init the plugin
 jimport( 'joomla.plugin.plugin' );
 
-class plgContentrpcping extends JPlugin
+class plgContentrpcping extends JPlugin{
 
 	// Some params
 	var $pluginName = 'rpcping';
 	var $pluginNameHumanReadable = 'Com_Content RPC Ping functionality';
 	var $params = null;
 	
-	function __construct(&$subject, $params) {
+	function plgContentrpcping(&$subject, $params) {
 		parent::__construct($subject, $params);
 		
 		$plugin = & JPluginHelper::getPlugin('content', $this->pluginName);
@@ -36,7 +36,7 @@ class plgContentrpcping extends JPlugin
 		    $this->oldcachetime = $this->conf->getValue('config.cachetime');
 		    $this->setfn = 'setValue';
 		}else{
-		    $this->oldcachetime = $this->conf->get('config.cachetime')
+		    $this->oldcachetime = $this->conf->get('config.cachetime');
 		    $this->setfn = 'set';
 		}
 
@@ -47,18 +47,31 @@ class plgContentrpcping extends JPlugin
 	}
 
 	// Send the Ping
-	function sendPing(){
+	function sendPing($item){
 	  $services = array(
 		      "yahoo"=>"http://api.my.yahoo.com/RPC2",
 		      "google"=>'http://blogsearch.google.com/ping/RPC2',
 		      "technorati"=>"http://rpc.technorati.com/rpc/ping",
 		      "yandex"=>"http://blogs.yandex.ru/");
 		      
+	  $page =  rtrim(JUri::base(false),"/").JRoute::_(ContentHelperRoute::getCategoryRoute($item->catslug));
 
-	  $source = JUri::current();
-	  $target = JUri::current();
+	  $source = $page;
 
-	  $service = 'http://blogsearch.google.com/ping/RPC2';
+	  if (strpos($page,"?") === false){
+	    $page .="?";
+
+	  }
+
+
+	  $target = $page . "format=feed&type=rss";
+
+
+	  $enabledservices = $this->params->get('enabledServices');
+
+	  foreach ($enabledServices as $service){
+
+	  $serviceurl = $services[$service];
 
 	  $request = xmlrpc_encode_request("pingback.ping", array($source, $target));
 	  $context = stream_context_create(array('http' => array(
@@ -70,7 +83,7 @@ class plgContentrpcping extends JPlugin
 	  $file = file_get_contents($service, false, $context);
 	  $response = xmlrpc_decode($file);
 
-
+	  }
 
 
 	}
@@ -88,10 +101,10 @@ class plgContentrpcping extends JPlugin
 		// Otherwise see if the content has been marked as updated
 
 	      if ($upd = $this->cache->get('plg_rpcping_content'.$item->id) && ($upd == '1')) {
-		    if ($this->sendPing()){
+		    $this->sendPing($item);
 		    // If it was successful, prevent further pings
 		      $this->cache->remove('plg_rpcping_content'.$item->id);
-		    }
+		    
 	      }
 
 
@@ -106,7 +119,7 @@ class plgContentrpcping extends JPlugin
 	*
 	*
 	*/
-	function onAfterSave( & $item, $isNew) {
+	function onContentAfterSave( $context,& $item, $isNew) {
 		   $setfn = $this->setfn;
 
 		  	// Set the cache time to 30 days 
