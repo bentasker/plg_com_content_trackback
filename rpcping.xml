@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<extension 
+
+version="1.6" type="plugin" group="content" method="upgrade">
+
+	<name>Com_content - Trackback Plugin</name>
+	<author>B Tasker</author>
+	<creationDate>Jan 31 2013</creationDate>
+	<copyright>Copyright (C) 2013 B Tasker / 2013 Virya Technologies</copyright>
+	<authorEmail>support@viryatechnologies.com</authorEmail>
+	<authorUrl>www.viryasoftware.com</authorUrl>
+	<version>1.0.1</version>
+	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
+	<description>This plugin allows you to RPC Pings whenever you update your content</description>
+	<files>
+		<filename plugin="rpcping">rpcping.php</filename>
+	</files>
+	
+	<config>
+	
+	
+	<fields name="params">
+	
+	      <fieldset name="basic">
+		<field name="initItemIds" type="radio" default="1" label="Init item ids" description="This will Increment all subsequent ID's item ids from 1 to ...">
+			<option value="0">No</option>
+			<option value="1">Yes</option>
+		</field>
+		
+		
+		
+		
+		<field name="applyTo" type="radio" default="1" label="Apply To" description="The plugin can be configured to only affect certain categories" >
+			<option value="1">All Categories</option>
+			<option value="0">Selected Categories</option>
+		</field>
+		
+		
+		<field  name="applCategories" type="sql"  multiple="true" default=""
+                                                query="SELECT id, name FROM #__k2_categories ORDER BY name" key_field="id" value_field="name"
+                                                label="Categories" description="Categories to apply the plugin to"/>
+                                                
+                                                
+                                                
+                                                
+                <field name="forder" type="text" default="0" label="Featured Insertion point" description="Where should featured items be inserted (normally 0)" />
+
+	
+		
+		
+		
+		
+		
+		
+	      </fieldset>
+	</fields>
+	
+	</config>
+</extension>
