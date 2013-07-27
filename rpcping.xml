@@ -3,17 +3,19 @@
 
 version="1.6" type="plugin" group="content" method="upgrade">
 
-	<name>Com_content - RPC Ping Plugin</name>
+	<name>Sitemap Update Ping Plugin</name>
 	<author>B Tasker</author>
 	<creationDate>Jan 31 2013</creationDate>
-	<copyright>Copyright (C) 2013 B Tasker / 2013 Virya Technologies</copyright>
-	<authorEmail>support@viryatechnologies.com</authorEmail>
-	<authorUrl>www.viryasoftware.com</authorUrl>
+	<copyright>Copyright (C) 2013 B Tasker</copyright>
+	<authorEmail>rpcping@bentasker.co.uk</authorEmail>
+	<authorUrl>http://www.bentasker.co.uk</authorUrl>
 	<version>1.0.1</version>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<description>This plugin allows you to send RPC Pings to Google whenever you update your content - we simply tell them the sitemap has been updated</description>
+	<description>This plugin allows you to ping search engines whenever you update your content - we simply tell them the sitemap has been updated</description>
 	<files>
 		<filename plugin="rpcping">rpcping.php</filename>
+		<filename>rpcping.xml</filename>
+		<filename>index.html</filename>
 	</files>
 	
 	<config>
@@ -32,7 +34,7 @@ version="1.6" type="plugin" group="content" method="upgrade">
 		</field>
 		
 		
-		<field type="text" name="connectionlimit" default="2" label="Max hourly pings" description="What's the maximum number of times an hour we should ping Google?" />
+		<field type="hidden" name="connectionlimit" default="2" label="Max hourly pings" description="What's the maximum number of times an hour we should ping Google?" />
 		<field type="text" name="connectTimeout" default="10" label="Connection Timeout" description="If Google doesn't respond immediately, how long should we wait? (Seconds)" />
 				
 	      </fieldset>
