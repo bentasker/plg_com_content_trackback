@@ -11,7 +11,7 @@ version="1.6" type="plugin" group="content" method="upgrade">
 	<authorUrl>www.viryasoftware.com</authorUrl>
 	<version>1.0.1</version>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
-	<description>This plugin allows you to RPC Pings whenever you update your content</description>
+	<description>This plugin allows you to send RPC Pings to Google whenever you update your content - we simply tell them the sitemap has been updated</description>
 	<files>
 		<filename plugin="rpcping">rpcping.php</filename>
 	</files>
@@ -22,19 +22,11 @@ version="1.6" type="plugin" group="content" method="upgrade">
 	<fields name="params">
 	
 	      <fieldset name="basic">
-		<field name="enabledServices" multiple="true" type="list" label="Enabled Ping Servers" description="The plugin will send a RPC ping to the selected servers whenever a page is first viewed after an update">
-			<option value="google">Google</option>
-			<option value="yahoo">Yahoo</option>
-			<option value="technorati">Technorati</option>
-			<option value="yandex">Yandex</option>
-			
-		</field>
 		
-		
-		
-		
-		
-		
+		<field type="textarea" name="sitemapURLs" default="" label="Sitemap URLs" description="Full URLs for your sitemaps (one per line)" />
+		<field type="text" name="connectionlimit" default="2" label="Max hourly pings" description="What's the maximum number of times an hour we should ping Google?" />
+		<field type="text" name="connectTimeout" default="10" label="Connection Timeout" description="If Google doesn't respond immediately, how long should we wait? (Seconds)" />
+				
 	      </fieldset>
 	</fields>
 	

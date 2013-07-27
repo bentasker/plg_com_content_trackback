@@ -21,6 +21,7 @@ class plgContentrpcping extends JPlugin{
 	var $pluginName = 'rpcping';
 	var $pluginNameHumanReadable = 'Com_Content RPC Ping functionality';
 	var $params = null;
+	var $cache;
 	
 	function plgContentrpcping(&$subject, $params) {
 		parent::__construct($subject, $params);
@@ -35,9 +36,11 @@ class plgContentrpcping extends JPlugin{
 		    if (method_exists($this->conf,'getValue')){
 		    $this->oldcachetime = $this->conf->getValue('config.cachetime');
 		    $this->setfn = 'setValue';
+		    $this->getfn = 'getValue';
 		}else{
 		    $this->oldcachetime = $this->conf->get('config.cachetime');
 		    $this->setfn = 'set';
+		    $this->getfn = 'get';
 		}
 
 		// Get the Cache object
@@ -46,87 +49,68 @@ class plgContentrpcping extends JPlugin{
         	
 	}
 
-	// Send the Ping
+
+
+	/** Send the Ping
+	*
+	*/
 	function sendPing($item){
-	  $services = array(
-		      "yahoo"=>"http://api.my.yahoo.com/RPC2",
-		      "google"=>'http://blogsearch.google.com/ping/RPC2',
-		      "technorati"=>"http://rpc.technorati.com/rpc/ping",
-		      "yandex"=>"http://blogs.yandex.ru/");
-		      
-	  $page =  rtrim(JUri::base(false),"/").JRoute::_(ContentHelperRoute::getCategoryRoute($item->catslug));
+	  
+	 
+	  $sitemaps = $this->params->get('sitemapURLs','');
 
-	  $source = $page;
+	  // No sitemaps specified, do nothing!
+	  if (empty($sitemaps)){
+	    return;
+	  }
+	  $sitemaps = explode("\n",$sitemaps);
+	  
 
-	  if (strpos($page,"?") === false){
-	    $page .="?";
+	  $x = $this->cache->get('plg_rpcping_content');
 
+	  $ch = curl_init();
+	  curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+	  curl_setopt($ch,CURLOPT_TIMEOUT,$this->params->get('connectTimeout',5));
+
+	  foreach ($sitemaps as $sitemap){
+
+	    // Tell Google
+	    curl_setopt($ch,CURLOPT_URL,"http://www.google.com/webmasters/tools/ping?sitemap=".urlencode($sitemap));
+	    curl_exec($ch);
+
+	    // Tell Bing
+	    curl_setopt($ch,CURLOPT_URL,"http://www.bing.com/webmaster/ping.aspx?siteMap=".urlencode($sitemap));
+	    curl_exec($ch);
+
+	    // Tell Ask (anyone still use Ask??)
+	    curl_setopt($ch,CURLOPT_URL,"http://submissions.ask.com/ping?sitemap=".urlencode($sitemap));
+	    curl_exec($ch);
+	    $x++;
 	  }
 
-
-	  $target = $page . "format=feed&type=rss";
-
-
-	  $enabledservices = $this->params->get('enabledServices');
-
-	  foreach ($enabledServices as $service){
-
-	  $serviceurl = $services[$service];
-
-	  $request = xmlrpc_encode_request("pingback.ping", array($source, $target));
-	  $context = stream_context_create(array('http' => array(
-					    'method' => "POST",
-					    'header' => "Content-Type: text/xml",
-					    'content' => $request
-					     )));
-
-	  $file = file_get_contents($service, false, $context);
-	  $response = xmlrpc_decode($file);
-
-	  }
-
+	  $this->cache->store($x, 'plg_rpcping_content');
 
 	}
 	
 
 
-	public function onContentPrepare($context, &$item, &$params, $page = 0)
-	{
-		// Don't run this plugin when the content is being indexed
-		if (($context == 'com_finder.indexer') || (!function_exists('xmlrpc_decode')))
-		{
-			return true;
-		}
-
-		// Otherwise see if the content has been marked as updated
-	      // For some reason this always fails, guessing you can't grab a cache that's been set from the back-end? TODO
-	      if ($upd = $this->cache->get('plg_rpcping_content'.$item->id) && ($upd == '1')) {
-		    $this->sendPing($item);
-		    // If it was successful, prevent further pings
-		      $this->cache->remove('plg_rpcping_content'.$item->id);
-		    
-	      }
-
-
-
-
-	}
-
-
 	/** Runs after pressing Save
 	*
-	* We don't actually know what the URL is going to be, so we're going to cheat and put something in the cache for onContentPrepare to check for
+	* Check whether we've breached our hourly limit, and if not send a ping.
 	*
 	*
 	*/
 	function onContentAfterSave( $context,& $item, $isNew) {
 		   $setfn = $this->setfn;
 
-		  	// Set the cache time to 30 days 
-		$this->conf->$setfn('config.cachetime', 604800 );
+		  	// Set the cache time to 1 hr 
+		$this->conf->$setfn('config.cachetime', 3600 );
 		$this->cache->setCaching( 1 );
 		
-		$this->cache->store("1", 'plg_rpcping_content'.$item->id);
+		// Send the Ping
+		$this->sendPing();
+
+		
 
 		$this->conf->$setfn('config.cachetime', $this->oldcachetime );
 		return '';
