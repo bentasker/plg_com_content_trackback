@@ -24,9 +24,33 @@ version="1.6" type="plugin" group="content" method="upgrade">
 	      <fieldset name="basic">
 		
 		<field type="textarea" name="sitemapURLs" default="" label="Sitemap URLs" description="Full URLs for your sitemaps (one per line)" />
+		
+		
+		<field type="list" name="pingFor" label="Send Pings for" default="1">
+		  <option value="0">New and Modified Content</option>
+		  <option value="1">New Content Only</option>
+		</field>
+		
+		
 		<field type="text" name="connectionlimit" default="2" label="Max hourly pings" description="What's the maximum number of times an hour we should ping Google?" />
 		<field type="text" name="connectTimeout" default="10" label="Connection Timeout" description="If Google doesn't respond immediately, how long should we wait? (Seconds)" />
 				
+	      </fieldset>
+	      <fieldset name="Search Engines" label="Search Engines">
+		<field type="radio" name="google" label="Google" default="1">
+		  <option value="1">Enabled</option>
+		  <option value="0">Disabled</option>
+		</field>
+		<field type="radio" name="ask" label="Ask" default="1">
+		  <option value="1">Enabled</option>
+		  <option value="0">Disabled</option>
+		</field>
+		<field type="radio" name="bing" label="Bing" default="1">
+		  <option value="1">Enabled</option>
+		  <option value="0">Disabled</option>
+		</field>
+		
+		
 	      </fieldset>
 	</fields>
 	

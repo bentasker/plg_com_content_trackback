@@ -58,15 +58,20 @@ class plgContentrpcping extends JPlugin{
 	  
 	 
 	  $sitemaps = $this->params->get('sitemapURLs','');
+	  $x = $this->cache->get('plg_rpcping_content',0);
+
 
 	  // No sitemaps specified, do nothing!
-	  if (empty($sitemaps)){
+	  if (empty($sitemaps) || $x >= $this->params->get('connectionlimit',1)){
 	    return;
 	  }
-	  $sitemaps = explode("\n",$sitemaps);
-	  
 
-	  $x = $this->cache->get('plg_rpcping_content');
+
+	  $google_enabled = $this->params->get('google',1);
+	  $ask_enabled = $this->params->get('ask',1);
+	  $bing_enabled = $this->params->get('bing',1);
+
+	  $sitemaps = explode("\n",$sitemaps);
 
 	  $ch = curl_init();
 	  curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
@@ -74,20 +79,26 @@ class plgContentrpcping extends JPlugin{
 
 	  foreach ($sitemaps as $sitemap){
 
-	    // Tell Google
-	    curl_setopt($ch,CURLOPT_URL,"http://www.google.com/webmasters/tools/ping?sitemap=".urlencode($sitemap));
-	    curl_exec($ch);
+	    if ($google_enabled){
+	      // Tell Google
+	      curl_setopt($ch,CURLOPT_URL,"http://www.google.com/webmasters/tools/ping?sitemap=".urlencode($sitemap));
+	      curl_exec($ch);
+	    }
 
-	    // Tell Bing
-	    curl_setopt($ch,CURLOPT_URL,"http://www.bing.com/webmaster/ping.aspx?siteMap=".urlencode($sitemap));
-	    curl_exec($ch);
+	    if ($bing_enabled){
+	      // Tell Bing
+	      curl_setopt($ch,CURLOPT_URL,"http://www.bing.com/webmaster/ping.aspx?siteMap=".urlencode($sitemap));
+	      curl_exec($ch);
+	    }
 
-	    // Tell Ask (anyone still use Ask??)
-	    curl_setopt($ch,CURLOPT_URL,"http://submissions.ask.com/ping?sitemap=".urlencode($sitemap));
-	    curl_exec($ch);
-	    $x++;
+	    if ($ask_enabled){
+	      // Tell Ask (anyone still use Ask??)
+	      curl_setopt($ch,CURLOPT_URL,"http://submissions.ask.com/ping?sitemap=".urlencode($sitemap));
+	      curl_exec($ch);
+	    }
+
 	  }
-
+	  $x++;
 	  $this->cache->store($x, 'plg_rpcping_content');
 
 	}
@@ -107,11 +118,11 @@ class plgContentrpcping extends JPlugin{
 		$this->conf->$setfn('config.cachetime', 3600 );
 		$this->cache->setCaching( 1 );
 		
-		// Send the Ping
-		$this->sendPing();
-
+		if (!$this->params->get('pingFor',1) || $isNew){
+		    // Send the Ping
+		    $this->sendPing();
+		}
 		
-
 		$this->conf->$setfn('config.cachetime', $this->oldcachetime );
 		return '';
 	}
