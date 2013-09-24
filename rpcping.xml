@@ -9,7 +9,7 @@ version="1.6" type="plugin" group="content" method="upgrade">
 	<copyright>Copyright (C) 2013 B Tasker</copyright>
 	<authorEmail>rpcping@bentasker.co.uk</authorEmail>
 	<authorUrl>http://www.bentasker.co.uk</authorUrl>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<license>http://www.gnu.org/licenses/gpl-2.0.html GNU/GPL</license>
 	<description>This plugin allows you to ping search engines whenever you update your content - we simply tell them the sitemap has been updated</description>
 	<files>
@@ -38,7 +38,9 @@ version="1.6" type="plugin" group="content" method="upgrade">
 		<field type="text" name="connectTimeout" default="10" label="Connection Timeout" description="If Google doesn't respond immediately, how long should we wait? (Seconds)" />
 				
 	      </fieldset>
-	      <fieldset name="Search Engines" label="Search Engines">
+	      
+	      
+	      <fieldset name="SearchEngines" label="Search Engines">
 		<field type="radio" name="google" label="Google" default="1">
 		  <option value="1">Enabled</option>
 		  <option value="0">Disabled</option>
