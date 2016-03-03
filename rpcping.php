@@ -1,7 +1,7 @@
 <?php
 /**
 *
-* Joomla 2.5 Adaptation of the K2 Item Ordering Plugin by www.jiliko.net
+* Joomla 2.5/3.x plugin to send a trackback ping on content update
 *
 * @author B Tasker
 * @license GNU GPL V2 - See http://www.gnu.org/licenses/gpl-2.0.html
