@@ -91,11 +91,12 @@ class plgContentrpcping extends JPlugin{
 	      curl_exec($ch);
 	    }
 
+	    /** ASK no longer offer this service
 	    if ($ask_enabled){
 	      // Tell Ask (anyone still use Ask??)
 	      curl_setopt($ch,CURLOPT_URL,"http://submissions.ask.com/ping?sitemap=".urlencode($sitemap));
 	      curl_exec($ch);
-	    }
+	    }*/
 
 	  }
 	  $x++;

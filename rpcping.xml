@@ -45,10 +45,12 @@ version="1.6" type="plugin" group="content" method="upgrade">
 		  <option value="1">Enabled</option>
 		  <option value="0">Disabled</option>
 		</field>
+<!-- Ask have removed support for this service
 		<field type="radio" name="ask" label="Ask" default="1">
 		  <option value="1">Enabled</option>
 		  <option value="0">Disabled</option>
 		</field>
+		-->
 		<field type="radio" name="bing" label="Bing" default="1">
 		  <option value="1">Enabled</option>
 		  <option value="0">Disabled</option>
