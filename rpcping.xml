@@ -56,6 +56,10 @@ version="1.6" type="plugin" group="content" method="upgrade">
 		  <option value="0">Disabled</option>
 		</field>
 		
+		<field type="radio" name="moreover" label="Moreover Technologies" default="1">
+		  <option value="1">Enabled</option>
+		  <option value="0">Disabled</option>
+		</field>
 		
 	      </fieldset>
 	</fields>

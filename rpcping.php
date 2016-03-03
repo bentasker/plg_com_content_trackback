@@ -5,7 +5,8 @@
 *
 * @author B Tasker
 * @license GNU GPL V2 - See http://www.gnu.org/licenses/gpl-2.0.html
-* @Copyright (C) 2013 Virya Technologies - Original (C) Jiliko,net
+* @Copyright (C) 2016 B Tasker
+* @version 1.0.3
 * 
 */
 
@@ -68,8 +69,10 @@ class plgContentrpcping extends JPlugin{
 
 
 	  $google_enabled = $this->params->get('google',1);
-	  $ask_enabled = $this->params->get('ask',1);
+	  //$ask_enabled = $this->params->get('ask',1);
 	  $bing_enabled = $this->params->get('bing',1);
+	  $moreover_enabled = $this->params->get('moreover',1);
+
 
 	  $sitemaps = explode("\n",$sitemaps);
 
@@ -97,6 +100,11 @@ class plgContentrpcping extends JPlugin{
 	      curl_setopt($ch,CURLOPT_URL,"http://submissions.ask.com/ping?sitemap=".urlencode($sitemap));
 	      curl_exec($ch);
 	    }*/
+
+	    if ($moreover_enabled){
+	      curl_setopt($ch,CURLOPT_URL,"http://api.moreover.com/ping?sitemap=".urlencode($sitemap));
+	      curl_exec($ch);
+	    }
 
 	  }
 	  $x++;
