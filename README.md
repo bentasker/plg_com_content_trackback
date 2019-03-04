@@ -13,6 +13,13 @@ Original description was:
     Plugin to send trackbacks for com_content articles. This functionality already exists for K2 and other CCMS' but hasn't existed for com_content since J1.5.
 
 
+## Documentation and Support
+
+This extension is provided without support.
+
+However, the original public facing documentation will remain available [here](https://www.bentasker.co.uk/documentation/joomla/210-rpc-ping-plugin)
+
+
 ## Copyright
 
 Copyright (c) 2016 [B Tasker](https://www.bentasker.co.uk)
